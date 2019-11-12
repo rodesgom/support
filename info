@@ -1,1 +1,126 @@
-TESTE
+using System;
+using System.Windows.Forms;
+using System.Diagnostics;
+using System.Management;
+
+namespace Info
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+
+            // host
+            textBox1.Text = Environment.MachineName;
+            // user
+            textBox2.Text = Environment.UserName;
+            // domain
+            textBox3.Text = Environment.UserDomainName;
+            
+            // sn
+            ManagementObjectSearcher MOS = new ManagementObjectSearcher("Select * From Win32_BaseBoard");
+            foreach (ManagementObject getserial in MOS.Get())
+            {
+                textBox5.Text = getserial["SerialNumber"].ToString();
+            }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            // ip
+            string myHost = System.Net.Dns.GetHostName();
+            System.Net.IPHostEntry myIPs = System.Net.Dns.GetHostEntry(myHost);
+            foreach (System.Net.IPAddress myIP in myIPs.AddressList)
+            textBox4.Text = myIP.ToString() + Environment.NewLine;
+
+            // clock
+            timer1.Start();
+
+            // timezone
+            TimeZoneInfo localZone = TimeZoneInfo.Local;
+            textBox7.Text = localZone.DisplayName.ToString() + Environment.NewLine;
+
+            // os
+            string r = "";
+            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_OperatingSystem"))
+            {
+                ManagementObjectCollection information = searcher.Get();
+                if (information != null)
+                {
+                    foreach (ManagementObject obj in information)
+                    {
+                        r = obj["Caption"].ToString() + " - " + obj["OSArchitecture"].ToString();
+                    }
+                }
+                r = r.Replace("NT 5.1.2600", "XP");
+                r = r.Replace("NT 5.2.3790", "Server 2003");
+                txtInfo.Text = r.ToString();
+            }
+        }
+        
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            // about
+            MessageBox.Show("Version: 1.0");
+        }
+
+        private void txtInfo_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            // link
+            Process.Start("https://github.com/rodesgom/support.git");
+        }
+
+        private void label7_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox6_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            // clock
+            textBox6.Text = DateTime.Now.ToString();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox8_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+    }
+}
+
