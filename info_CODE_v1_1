@@ -1,0 +1,112 @@
+using System;
+using System.Windows.Forms;
+using System.Diagnostics;
+using System.Management;
+using System.Linq;
+using System.Collections.Generic;
+using Microsoft.Win32;
+
+namespace Info
+{
+    public partial class Form1 : Form
+    {
+        //BIOS
+        public string SerialNumber;
+        public string SMBIOSBIOSVersion;
+
+        public Form1()
+        {
+            InitializeComponent();
+            //host
+            textBox1.Text = Environment.MachineName;
+            //user
+            textBox2.Text = Environment.UserName;
+            //domain
+            textBox3.Text = Environment.UserDomainName;
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            //ip
+            string myHost = System.Net.Dns.GetHostName();
+            System.Net.IPHostEntry myIPs = System.Net.Dns.GetHostEntry(myHost);
+            foreach (System.Net.IPAddress myIP in myIPs.AddressList)
+            textBox4.Text = myIP.ToString() + Environment.NewLine;
+            //clock
+            timer1.Start();
+            //timezone
+            TimeZoneInfo localZone = TimeZoneInfo.Local;
+            textBox7.Text = localZone.DisplayName.ToString() + Environment.NewLine;
+            sku.PerformClick();
+        }           
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            //about
+            MessageBox.Show("Version: 1.1 | DTI - TECNISA |");
+        }
+      
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            //link
+            Process.Start("https://github.com/rodesgom/support.git");
+        }
+       
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            //clock
+            textBox6.Text = DateTime.Now.ToString();
+        }
+       
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            //BIOS
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_BIOS");
+            ManagementObjectCollection collection = searcher.Get();
+            //OS
+            string releaseId = Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion", "ReleaseId", "").ToString();
+            string ProductName = Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion", "ProductName", "").ToString();
+            string CurrentBuild = Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion", "CurrentBuild", "").ToString();
+            string UBR = Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion", "UBR", "").ToString();
+            textBox10.Text = releaseId.ToString();
+            textBox11.Text = ProductName.ToString();
+            textBox12.Text = CurrentBuild.ToString();
+            textBox13.Text = UBR.ToString();
+            //BIOS
+            var items = new List<Form1>();
+            foreach (ManagementObject obj in collection)
+            {
+                var item = new Form1();
+                item.SerialNumber = (string)obj["SerialNumber"];
+                item.SMBIOSBIOSVersion = (string)obj["SMBIOSBIOSVersion"];
+                items.Add(item);
+            }
+            //BIOS
+            var BIOS = (from b in items select b).FirstOrDefault();
+            textBox5.Text = BIOS.SerialNumber;
+            textBox9.Text = BIOS.SMBIOSBIOSVersion;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            //hide
+            this.Height = 450;
+            button2.Visible = false;
+            button3.Visible = true;
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            //hide
+            this.Height = 410;
+            button2.Visible = true;
+            button3.Visible = false;
+        }
+
+        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            // link
+            Process.Start("https://portal.tsc2.com.br/tas/sso/tecnisa");
+        }
+    }
+}
