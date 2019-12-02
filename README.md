@@ -3,9 +3,7 @@
 > Utilizado para captura de informações sobre o equipamento.
 
 
-
-
-![screenshot](https://user-images.githubusercontent.com/57644534/69970634-52673b80-14fd-11ea-9a3f-fa3ebf0af729.PNG)
+![screenshot](https://user-images.githubusercontent.com/57644534/69973023-7d538e80-1501-11ea-87a1-3bff2431aa2c.PNG)
 
 ## Instalação
 
